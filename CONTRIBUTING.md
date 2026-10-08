@@ -84,7 +84,8 @@ Rules enforced by CI ([`skill-validator`](https://github.com/agent-ecosystem/ski
 2. Add/modify the skill
 3. Open the PR with the `pr-groupbees` (skills-core)
    conventions (Summary / What changed / Test plan, labels for release notes)
-4. Squash-merge after approval
+4. Merge after approval: squash by default, rebase-merge when every commit
+   is a clean, self-contained step (see `pr-groupbees`)
 
 ## Versioning
 
