@@ -18,7 +18,7 @@ env:
   SKILL_VALIDATOR_VERSION: v1.6.2
   # groupbees/pollen — pinned release; bump deliberately. Not named POLLEN_*:
   # that prefix is pollen's own config namespace.
-  PIN_POLLEN_VERSION: v0.1.0
+  PIN_POLLEN_VERSION: v0.3.0
 
 jobs:
   validate-skills:

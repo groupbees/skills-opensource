@@ -17,7 +17,7 @@ to your project's `pollen.yaml`, pinned to a release, then `pollen update`.
 ```yaml
 repos:
   - repo: https://github.com/groupbees/skills-opensource
-    revision: vX.Y.Z
+    revision: <sha>  # vX.Y.Z — written by `pollen autoupdate --freeze`
     paths:
       - path: skills
         recurse: true

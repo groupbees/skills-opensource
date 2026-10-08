@@ -98,8 +98,9 @@ Anthropic / Google skill repos). Versioning is **catalog-wide, via git tags**:
   `tag-opensource`.
 - The **GitHub Releases page is the changelog** — no hand-maintained
   `CHANGELOG.md` to keep in sync.
-- To **pin**, a consumer sets `revision: vX.Y.Z` in its `pollen.yaml` — a
-  branch there floats (pollen has no lockfile yet).
+- To **pin**, a consumer sets the commit of a release in its `pollen.yaml`,
+  tag in a comment: `revision: <sha>  # vX.Y.Z` (`pollen autoupdate --freeze`
+  writes it). The commit cannot move, so no lockfile is needed.
 
 ## Naming conventions
 

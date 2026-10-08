@@ -31,19 +31,27 @@ dirs match it — install, refresh, prune — tracking what it owns in a
 | Scope | Config | Targets |
 |-------|--------|---------|
 | **Project** (default) | `pollen.yaml` committed at the project root | `.claude/skills/` + `.agents/skills/` (gitignored) |
-| **Machine** | one user-level file, run with `--config` | `~/.claude/skills/` + `~/.agents/skills/` |
+| **Machine** | `~/.config/pollen/pollen.yaml`, run with `pollen update -g` | `~/.claude/skills/` + `~/.agents/skills/` |
 
 Two target dirs because **no single one covers every agent**: Claude Code reads
 `.claude/skills`, the others scan `.agents/skills`.
 
-The machine-level file lives at `~/.config/pollen/pollen.yaml` by
-convention (pollen has no global default path; pass `--config`, never export
-`POLLEN_CONFIG_FILE`, which would shadow every project's config).
+`pollen update -g` (`--global`) reads `~/.config/pollen/pollen.yaml` and
+defaults to the user-level targets.
 
-**One config per target set.** pollen prunes whatever the config no longer
-selects from that target's state, so two configs writing to the same
-`~/.claude/skills` would remove each other's skills. At machine level, list
-every module in the one user-level file.
+**Pinning: a commit, not a lockfile.** Each git source is pinned to the commit
+of a release, with the tag in a comment: `revision: <sha>  # vX.Y.Z`. A commit
+cannot move — a tag can, a branch does on every push — so `pollen.yaml` *is*
+the lock: pollen resolves no version ranges and skills have no transitive
+dependencies, so a separate lockfile would only repeat it. `pollen outdated`
+shows newer releases, `pollen autoupdate --freeze` bumps the pins (Renovate
+can too), `pollen validate --pinned` enforces the convention in the pre-commit
+hook or CI. **Do not add a lockfile.**
+
+**One config per target directory.** An update prunes whatever its config no
+longer declares, so pollen refuses a directory another config manages
+(`--force` hands it over). At machine level, list every module in the one
+user-level file.
 
 This repo's own [`pollen.yaml`](pollen.yaml) (`repo: local`) deploys the
 catalog into this repo, so agents working here use it — and CI runs
