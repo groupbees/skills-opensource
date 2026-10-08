@@ -52,8 +52,7 @@ catalog into this repo, so agents working here use it — and CI runs
 ## Modules
 
 skills-opensource is one module among others (`skills-core`, …), each its own repo
-with a `skills-module.json` (`{ name, description }`; the version lives in git
-tags). A consumer mixes modules by listing several `repos:` in its
+versioned by its git tags. A consumer mixes modules by listing several `repos:` in its
 `pollen.yaml`. Skill names must be **unique across modules**: they deploy
 flat, map to a single `/<name>`, and pollen rejects two sources yielding the
 same name.
