@@ -11,21 +11,20 @@ read natively by **Claude Code**, **GitHub Copilot** and **Cursor**.
 
 ## 🚀 Usage
 
-Install with [pollen](https://github.com/groupbees/pollen): add this module
-to your project's `pollen.yaml`, pinned to a release, then `pollen update`.
+Install with [pollen](https://github.com/groupbees/pollen): add this module to
+your project's `pollen.yaml` (or to `~/.config/pollen/pollen.yaml` for every
+project, `pollen update -g`), then run `pollen update`.
 
 ```yaml
-repos:
   - repo: https://github.com/groupbees/skills-opensource
-    revision: <sha>  # vX.Y.Z — written by `pollen autoupdate --freeze`
+    revision: vX.Y.Z   # then `pollen autoupdate --freeze` pins its commit
     paths:
       - path: skills
         recurse: true
 ```
 
-It deploys into `.claude/skills/` (Claude Code) and `.agents/skills/` (Copilot,
-Cursor, Codex…). Skill names must be **unique across modules**. See
-[AGENTS.md](AGENTS.md).
+Everything else about pollen — pinning, updates, errors — is in its docs and in
+the `pollen` skill it ships (add `groupbees/pollen` with `path: skills`).
 
 ## 📋 Skills Catalog
 

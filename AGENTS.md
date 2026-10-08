@@ -20,41 +20,16 @@ standard): `skills/<domain>/<name>/SKILL.md` — YAML frontmatter with `name` +
 The same `SKILL.md` format is read natively by Claude Code, GitHub Copilot and
 Cursor, so there is **one format and one install path**, no per-tool conversion.
 
-## Install: pollen, per project first
+## Install: with pollen
 
-Skills are consumed with [pollen](https://github.com/groupbees/pollen), not
-copied by hand. A consumer declares sources in a `pollen.yaml` (git repos
-pinned to a `revision`, or `repo: local`) and `pollen update` makes the target
-dirs match it — install, refresh, prune — tracking what it owns in a
-`.pollen.json` per target.
-
-| Scope | Config | Targets |
-|-------|--------|---------|
-| **Project** (default) | `pollen.yaml` committed at the project root | `.claude/skills/` + `.agents/skills/` (gitignored) |
-| **Machine** | `~/.config/pollen/pollen.yaml`, run with `pollen update -g` | `~/.claude/skills/` + `~/.agents/skills/` |
-
-Two target dirs because **no single one covers every agent**: Claude Code reads
-`.claude/skills`, the others scan `.agents/skills`.
-
-`pollen update -g` (`--global`) reads `~/.config/pollen/pollen.yaml` and
-defaults to the user-level targets.
-
-**Pinning: a commit, not a lockfile.** Each git source is pinned to the commit
-of a release, with the tag in a comment: `revision: <sha>  # vX.Y.Z`. A commit
-cannot move — a tag can, a branch does on every push — so `pollen.yaml` *is*
-the lock: pollen resolves no version ranges and skills have no transitive
-dependencies, so a separate lockfile would only repeat it. `pollen outdated`
-shows newer releases, `pollen autoupdate --freeze` bumps the pins (Renovate
-can too), `pollen validate --pinned` enforces the convention in the pre-commit
-hook or CI. **Do not add a lockfile.**
-
-**One config per target directory.** An update prunes whatever its config no
-longer declares, so pollen refuses a directory another config manages
-(`--force` hands it over). At machine level, list every module in the one
-user-level file.
+Consumers install this module with [pollen](https://github.com/groupbees/pollen),
+per project or machine-wide. How to use pollen — configs, pinning
+(`revision: <sha>  # vX.Y.Z`, no lockfile), commands, errors — lives in the
+**`pollen` skill**, shipped and versioned with pollen (`groupbees/pollen`,
+`path: skills`). Do not restate it here: point to it.
 
 This repo's own [`pollen.yaml`](pollen.yaml) (`repo: local`) deploys the
-catalog into this repo, so agents working here use it — and CI runs
+catalog into this repo, so agents working here use it; CI runs
 `pollen validate` on it.
 
 ## Modules
