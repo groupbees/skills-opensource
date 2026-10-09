@@ -55,7 +55,9 @@ skill: edit `skills/<domain>/<name>/SKILL.md`, then re-run `pollen update`.
 
 - **Standard `SKILL.md`, nothing tool-specific** — portable across Claude Code,
   Copilot and Cursor as-is.
-- **Validation in CI** (`.github/workflows/ci.yml`), four checks:
+- **Validation in CI**: `.github/workflows/ci.yml` only calls the shared
+  `skills-module` workflow of `groupbees/.github` — change the checks there,
+  not here. Four checks:
   1. [`skill-validator`](https://github.com/agent-ecosystem/skill-validator)
      `check --strict` — spec conformance plus what the official validator does
      not cover: token budgets, broken links, orphan files, description quality.

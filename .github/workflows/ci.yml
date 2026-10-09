@@ -1,9 +1,8 @@
 name: ci
 
-# Validation for a GroupBees skills module. Same three checks in every module
-# (skills-core, skills-slides, …): the skills are spec-valid and deployable by
-# pollen, the generated README table is up to date, and the catalog script is
-# sane.
+# The CI of every skills module lives in groupbees/.github (skill-validator,
+# pollen validate, README table, unique names, shellcheck). Dependabot bumps
+# the pin below; never copy the jobs here.
 on:
   push:
     branches: [main]
@@ -13,88 +12,6 @@ on:
 permissions:
   contents: read
 
-env:
-  # agent-ecosystem/skill-validator — pinned; bump deliberately.
-  SKILL_VALIDATOR_VERSION: v1.6.2
-  # groupbees/pollen — pinned release; bump deliberately. Not named POLLEN_*:
-  # that prefix is pollen's own config namespace.
-  PIN_POLLEN_VERSION: v0.3.0
-
 jobs:
-  validate-skills:
-    name: Validate SKILL.md
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - uses: actions/setup-go@v6
-        with:
-          go-version: stable
-          cache: false
-
-      - name: Install skill-validator
-        run: go install github.com/agent-ecosystem/skill-validator/cmd/skill-validator@${{ env.SKILL_VALIDATOR_VERSION }}
-
-      # The validator takes ONE skill directory at a time, and our catalog nests
-      # skills under a domain folder (skills/<domain>/<name>/), so we loop.
-      # --strict → warnings fail the build, a skill never drifts out of spec.
-      # --allow-dirs=templates → bundled assets live in templates/ (the spec's
-      # own name is assets/; we keep templates/ for readability).
-      - name: skill-validator check
-        run: |
-          failed=0
-          for skill in $(find skills -name SKILL.md -exec dirname {} \; | sort); do
-            echo "::group::$skill"
-            skill-validator check --strict --allow-dirs=templates \
-              --emit-annotations "$skill" || failed=$((failed + 1))
-            echo "::endgroup::"
-            {
-              echo "### $skill"
-              skill-validator check --allow-dirs=templates -o markdown "$skill" || true
-            } >> "$GITHUB_STEP_SUMMARY"
-          done
-          echo "$failed skill(s) failed validation."
-          test "$failed" -eq 0
-
-  pollen-validate:
-    name: pollen validate
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      # Release archive (static Linux binary), checked against SHA256SUMS.
-      - name: Install pollen
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          cd "$RUNNER_TEMP"
-          archive="pollen-x86_64-unknown-linux-musl-${PIN_POLLEN_VERSION}.tar.gz"
-          gh release download "$PIN_POLLEN_VERSION" --repo groupbees/pollen \
-            --pattern "$archive" --pattern SHA256SUMS
-          sha256sum --check --ignore-missing SHA256SUMS
-          mkdir pollen && tar -xzf "$archive" -C pollen
-          echo "$RUNNER_TEMP/pollen/${archive%.tar.gz}" >> "$GITHUB_PATH"
-      # Parses pollen.yaml and checks every skill it selects against the
-      # Agent Skills spec — exactly what a consumer's `pollen update` does.
-      - run: pollen validate
-
-  check-catalog:
-    name: Catalog (README table, unique names)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      # The table is generated from every SKILL.md `description`; a stale table
-      # means a skill was added or reworded without regenerating it.
-      - name: Check generated table
-        run: scripts/skills-catalog.sh --check-readme
-      # Skills deploy flat: skills/<domain>/<name> must be unique on <name>.
-      - name: Check unique skill names
-        run: scripts/skills-catalog.sh --check-names
-
-  lint-scripts:
-    name: Lint scripts
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      # shellcheck ships on the GitHub runners.
-      # The catalog script, plus any script a skill bundles in templates/.
-      - run: find scripts skills -name '*.sh' -print0 | xargs -0 shellcheck
+  module:
+    uses: groupbees/.github/.github/workflows/skills-module.yml@ce622477210c93cf061ec96b5a1ee89d0920e037  # v1.0.0

@@ -39,7 +39,8 @@ the `pollen` skill it ships (add `groupbees/pollen` with `path: skills`).
 
 ## ✅ CI
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml): `skill-validator check
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) calls the shared
+`skills-module` workflow of `groupbees/.github`: `skill-validator check
 --strict`, `pollen validate`, the generated README table, and
 `shellcheck` on every `*.sh`.
 
