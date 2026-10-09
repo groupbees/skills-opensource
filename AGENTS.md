@@ -28,9 +28,9 @@ per project or machine-wide. How to use pollen — configs, pinning
 **`pollen` skill**, shipped and versioned with pollen (`groupbees/pollen`,
 `path: skills`). Do not restate it here: point to it.
 
-This repo's own [`pollen.yaml`](pollen.yaml) (`repo: local`) deploys the
-catalog into this repo, so agents working here use it; CI runs
-`pollen validate` on it.
+A module ships **no `pollen.yaml`**: that file belongs to consumers. CI
+validates every skill with a throwaway config, and CONTRIBUTING shows how to
+preview a skill the same way before releasing it.
 
 ## Modules
 
@@ -47,9 +47,9 @@ In every tool: **auto-used** when the prompt matches the skill's `description`
 
 ## The one rule to remember
 
-**Edit the source, never the installed copy.** Everything under a
-`.claude/skills/` or `.agents/skills/` is deployed by pollen. To change a
-skill: edit `skills/<domain>/<name>/SKILL.md`, then re-run `pollen update`.
+**Edit the source, never an installed copy.** Change
+`skills/<domain>/<name>/SKILL.md` here; consumers get it from the next release
+with `pollen update`.
 
 ## Design choices
 
@@ -88,7 +88,7 @@ Most skills are added by an AI agent, so the duplicate check is **your** job:
 1. Create/edit `skills/<domain>/<name>/SKILL.md` — frontmatter is **only** `name`
    (= folder name) + `description` (it drives both auto-use and the `/` picker).
    Add `templates/` if the skill ships assets.
-2. `pollen update --dry-run`, then `pollen update` (deploys into this repo).
+2. Preview it with a throwaway pollen config (CONTRIBUTING, *Preview a skill*).
 3. `scripts/skills-catalog.sh --readme` to regenerate the README table, and commit it.
 4. Commit with the `commit-groupbees` conventions, open the PR with
    `pr-groupbees`, release with `tag-opensource`.

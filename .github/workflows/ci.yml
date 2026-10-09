@@ -14,4 +14,4 @@ permissions:
 
 jobs:
   module:
-    uses: groupbees/.github/.github/workflows/skills-module.yml@ce622477210c93cf061ec96b5a1ee89d0920e037  # v1.0.0
+    uses: groupbees/.github/.github/workflows/skills-module.yml@3b24f02342c0b0b4c5f5231ccaf4a9fd0275a873  # v1.1.0

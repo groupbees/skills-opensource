@@ -78,7 +78,20 @@ Rules enforced by CI ([`skill-validator`](https://github.com/agent-ecosystem/ski
 - [ ] `skill-validator check --strict --allow-dirs=templates skills/` passes
 - [ ] Templates (if any) are functional and tested
 
-### 4. Review process
+### 4. Preview a skill before releasing it
+
+A module ships no `pollen.yaml` (consumers own theirs), so write a throwaway one
+at the root — `repo: local` resolves against the config's directory — and deploy
+into a scratch directory, never into your real skills:
+
+```bash
+printf 'repos:\n  - repo: local\n    paths:\n      - path: skills\n        recurse: true\n' > .pollen-preview.yaml
+pollen validate --config .pollen-preview.yaml
+pollen update --config .pollen-preview.yaml --target /tmp/skills-preview
+rm .pollen-preview.yaml          # gitignored anyway (/.pollen-*.yaml)
+```
+
+### 5. Review process
 
 1. Branch: `feat/skills/<domain>/<skill-name>`
 2. Add/modify the skill

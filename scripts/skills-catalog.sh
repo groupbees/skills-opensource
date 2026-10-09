@@ -2,7 +2,7 @@
 #
 # skills-catalog.sh — Catalog tooling for a GroupBees skills module.
 #
-# Installing skills is pollen's job (see pollen.yaml and the README); this
+# Installing skills is pollen's job, in the consumer's pollen.yaml; this
 # script only reads the catalog: it lists the skills, keeps the README table in
 # sync with the SKILL.md descriptions, and guards leaf-name uniqueness (skills
 # deploy flat, so skills/<domain>/<name> must be unique on <name> alone).
